@@ -1,1 +1,1 @@
-web: uvicorn backend_app:app --host 0.0.0.0 --port 10000
+web: gunicorn backend_app:app 
