@@ -20,3 +20,26 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True 
+# -----------------------------
+# BEBÊS
+# -----------------------------
+
+class BabyBase(BaseModel):
+    name: str
+    gender: str
+    birth_date: str  # YYYY-MM-DD
+
+class BabyCreate(BabyBase):
+    pass
+
+class BabyUpdate(BaseModel):
+    name: str | None = None
+    gender: str | None = None
+    birth_date: str | None = None
+
+class BabyResponse(BabyBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True 
