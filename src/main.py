@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPIfrom fastapi import FastAPI
 from src.routers import babies, measurements
 from src.database import Base, engine
 
