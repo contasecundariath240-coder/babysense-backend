@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers.users import router as users_router
 from routers.babies import router as babies_router
-from routers.measurements import router as measurements_router
+from routers.measurements import router as measurements_router 
 
 app = FastAPI(title="BabySense API")
 
