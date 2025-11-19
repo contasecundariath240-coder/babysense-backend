@@ -28,12 +28,13 @@ def add_measurement():
 
     return {"status": "ok"}, 201
 
+
 @measurements_bp.route("/<baby_id>", methods=["GET"])
 def list_measurements(baby_id):
     conn = get_db()
     cur = conn.cursor()
     cur.execute(
-        "SELECT id, temperature, created_at FROM measurements WHERE baby_id = %s ORDER BY created_at DESC",
+        "SELECT id, temperature FROM measurements WHERE baby_id = %s",
         (baby_id,)
     )
     rows = cur.fetchall()
@@ -41,5 +42,6 @@ def list_measurements(baby_id):
     conn.close()
 
     return jsonify([
-        {"id": r[0], "temperature": r[1], "created_at": r[2]} for r in rows
+        {"id": r[0], "temperature": r[1]}
+        for r in rows
     ]) 
