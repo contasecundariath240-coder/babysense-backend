@@ -1,26 +1,16 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from src.database import SessionLocal
-from src.models import Baby
-from src.schemas import BabyCreate, BabyResponse
+from fastapi import FastAPI
+from src.database import Base, engine
+from src.routers import babies, measurements
 
-router = APIRouter(prefix="/babies", tags=["Babies"])
+# Criar tabelas
+Base.metadata.create_all(bind=engine)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app = FastAPI()
 
-@router.post("/", response_model=BabyResponse)
-def create_baby(baby: BabyCreate, db: Session = Depends(get_db)):
-    db_baby = Baby(name=baby.name, birthdate=baby.birthdate)
-    db.add(db_baby)
-    db.commit()
-    db.refresh(db_baby)
-    return db_baby
+# Rotas
+app.include_router(babies.router, prefix="/babies", tags=["Babies"])
+app.include_router(measurements.router, prefix="/measurements", tags=["Measurements"])
 
-@router.get("/", response_model=list[BabyResponse])
-def list_babies(db: Session = Depends(get_db)):
-    return db.query(Baby).all() 
+@app.get("/")
+def root():
+    return {"message": "Backend is running!"} 
