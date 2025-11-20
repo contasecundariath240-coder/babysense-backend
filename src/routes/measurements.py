@@ -24,11 +24,21 @@ def create_measurement(measurement: schemas.MeasurementCreate, db: Session = Dep
     if not baby:
         raise HTTPException(status_code=404, detail="Baby not found")
 
-    new = models.Measurement(
-        baby_id=measurement.baby_id,
-        temperature=measurement.temperature,
-        heart_rate=measurement.heart_rate,
-        breathing_rate=measurement.breathing_rate
+   # dentro de create_measurement(...)
+fever_threshold = 38.0
+fever_flag = measurement.temperature >= fever_threshold
+
+new = models.Measurement(
+    baby_id=measurement.baby_id,
+    temperature=measurement.temperature,
+    heart_rate=measurement.heart_rate,
+    breathing_rate=measurement.breathing_rate,
+    fever=fever_flag,
+)
+db.add(new)
+db.commit()
+db.refresh(new)
+return new 
     )
     db.add(new)
     db.commit()
