@@ -28,27 +28,25 @@ def create_measurement(measurement: schemas.MeasurementCreate, db: Session = Dep
 fever_threshold = 38.0
 fever_flag = measurement.temperature >= fever_threshold
 
-new = models.Measurement(
-    baby_id=measurement.baby_id,
-    temperature=measurement.temperature,
-    heart_rate=measurement.heart_rate,
-    breathing_rate=measurement.breathing_rate,
-    fever=fever_flag,
-)
-db.add(new)
-db.commit()
-db.refresh(new)
-return new 
-    )
-    db.add(new)
-    db.commit()
-    db.refresh(new)
-    return new
 
 
 @router.get("/", response_model=List[schemas.MeasurementResponse])
 def list_measurements(db: Session = Depends(get_db)):
     return db.query(models.Measurement).order_by(models.Measurement.created_at.desc()).all()
+@router.post("/", response_model=schemas.MeasurementResponse)
+def create_measurement(measurement: schemas.MeasurementCreate, db: Session = Depends(get_db)):
+    new = models.Measurement(
+        baby_id=measurement.baby_id,
+        temperature=measurement.temperature,
+        heart_rate=measurement.heart_rate,
+        breathing_rate=measurement.breathing_rate,
+        fever_fever_flag=measurement.fever_fever_flag,
+    )
+
+    db.add(new)
+    db.commit()
+    db.refresh(new)
+    return new 
 
 
 @router.get("/baby/{baby_id}", response_model=List[schemas.MeasurementResponse])
